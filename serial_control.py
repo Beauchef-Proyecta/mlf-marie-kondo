@@ -2,7 +2,6 @@ import serial
 from serial import Serial
 import time
 
-
 class SerialControl:
 
     def __init__(self, port="/dev/ttyUSB0"):
@@ -41,6 +40,9 @@ class SerialControl:
         status = "Not implemented"
         print(f"Sensor status: {status}")
 
-    def run_effector(self):
-        status = "Not implemented"
+    def run_effector(self, ang):
+        status = "Testing"
+        id = 4
+        angledata = ang
+        self.serial.write(('&' + str(id) + ':' + str(angledata)).encode())
         print(f"Effector status: {status}")

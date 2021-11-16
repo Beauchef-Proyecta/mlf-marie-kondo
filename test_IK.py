@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/pi/mlf/core')
+sys.path.append('/home/pi/mlf-marie-kondo')
 from serial_control import SerialControl
 from mk2robot import MK2Robot
 #from core.serial_control import SerialControl #for pc
@@ -23,8 +23,12 @@ for i in range(len(X_poses)):
     robot_serial.write_servo(3, q2 + q1)
     time.sleep(1.2)
 
+for i in range(5):
+    robot_serial.run_effector(0)
+    time.sleep(1.2)
+    robot_serial.run_effector(90)
+    time.sleep(1.2)
+
 robot_serial.read_status()
 robot_serial.read_sensors()
-robot_serial.run_effector()
-
 robot_serial.close_serial()
