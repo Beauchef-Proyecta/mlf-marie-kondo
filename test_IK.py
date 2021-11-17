@@ -28,6 +28,7 @@ print("voy 3")
 time.sleep(1.2)
 robot_serial.run_effector(40)
 
+i=1
 q0, q1, q2 = robot.inverse_kinematics(X_poses[i], Y_poses[i], Z_poses[i])
 robot_serial.write_servo(1, q0 + 45)
 eff.open()
