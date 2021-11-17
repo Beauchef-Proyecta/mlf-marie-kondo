@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/pi/mlf/core')
+#sys.path.append('/home/pi/mlf-marie-kondo')
 from serial_control import SerialControl
 from mk2robot import MK2Robot
 #from core.serial_control import SerialControl #for pc
