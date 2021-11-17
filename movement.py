@@ -16,11 +16,13 @@ class Effector:
         self.angmin = a0
         self.angmax = a1
 
-    def close(self,i=10):#angulo para cerrarse es 90
-        robot_serial.run_effector(self.angmin)
-
-    def open(self):
-        robot_serial.run_effector(self.angmax)
+    def action(self, a=1):
+        if a:
+            #open
+            robot_serial.run_effector(self.angmin)
+        else:
+            #close
+            robot_serial.run_effector(self.angmax)
 
 
 
