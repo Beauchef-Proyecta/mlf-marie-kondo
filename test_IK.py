@@ -1,5 +1,5 @@
 import sys
-#sys.path.append('/home/pi/mlf-marie-kondo')
+sys.path.append('/home/pi/mlf-marie-kondo')
 from serial_control import SerialControl
 from mk2robot import MK2Robot
 #from core.serial_control import SerialControl #for pc
@@ -19,10 +19,14 @@ Z_poses = np.array([140, 150, 160, 170])
 robot_serial.run_effector(40)
 time.sleep(1.2)
 robot_serial.run_effector(90)
+print("voy 2")
 time.sleep(1.2)
 robot_serial.run_effector(60)
+print("voy 3")
 time.sleep(1.2)
-robot_serial.run_effector(40)
+robot_serial.run_effector(4)
+
+print("termine")
 time.sleep(1.2)
 
 robot_serial.read_status()

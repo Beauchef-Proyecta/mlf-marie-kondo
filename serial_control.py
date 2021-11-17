@@ -40,7 +40,7 @@ class SerialControl:
         status = "Not implemented"
         print(f"Sensor status: {status}")
 
-    def run_effector(self):
+    def run_effector(self, ang):
         status = "Testing"
         id = 4
         angledata = ang
