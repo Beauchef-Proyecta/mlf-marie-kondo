@@ -1,66 +1,86 @@
 import numpy as np
 import cv2
 
-# Read the original image
-screw_img = cv2.imread('screw.jpg')
-screw_img = cv2.resize(screw_img, (384, 288), interpolation=cv2.INTER_LINEAR)
 
-glass_img = cv2.imread('glass.jpg')
-glass_img = cv2.resize(glass_img, (384, 255), interpolation=cv2.INTER_LINEAR)
+class Detector:
+    def __init__(self, img_size=(360, 640)):
+        self.img = None
+        self.img_size = img_size
 
+        # Initialize some images used in processing
+        self.img_gray = None
+        self.img_blur = None
+        self.img_edges = None
+        self.img_dst = None
+    
 
-# Convert to graycsale
-img_gray1 = cv2.cvtColor(screw_img, cv2.COLOR_BGR2GRAY)
-img_gray2 = cv2.cvtColor(glass_img, cv2.COLOR_BGR2GRAY)
-# Blur the image for better edge detection
-img_blur1 = cv2.GaussianBlur(img_gray1, (3,3), 0)
-img_blur2 = cv2.GaussianBlur(img_gray2, (3,3), 0)
-
-
-# Canny Edge Detection
-edges1 = cv2.Canny(image=img_blur1, threshold1=100, threshold2=200)
-edges2 = cv2.Canny(image=img_blur2, threshold1=100, threshold2=200)
+    def load_img(self, img, resize=True):
+        self.img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        if resize:
+            self.img = cv2.resize(self.img, self.img_size, interpolation=cv2.INTER_LINEAR)
 
 
-'''
-# Binarization
-ret, thresh = cv2.threshold(edges,10,255,cv2.THRESH_BINARY)
-'''
+    def get_img(self, process="img"):
+        return getattr(self, process)
 
 
-# Pixel expansion
-kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # Structure 5 × Square structure element of 5
-dst1 = cv2.dilate(edges1, kernel=kernel)  # expand
-dst2 = cv2.dilate(edges2, kernel=kernel)  # expand
+    def centroid_detection(self):
+        # Convert to graycsale
+        img_gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        self.img_gray = img_gray
 
 
-# Centroid coordinates
-moments1 = cv2.moments(dst1, binaryImage=True)
-moments2 = cv2.moments(dst2, binaryImage=True)
+        # Blur the image for better edge detection
+        img_blur = cv2.GaussianBlur(img_gray, (3,3), 0)
+        self.img_blur = img_blur
 
-x1_coord = int(moments1['m10']/moments1['m00'])
-y1_coord = int(moments1['m01']/moments1['m00'])
-x2_coord = int(moments2['m10']/moments2['m00'])
-y2_coord = int(moments2['m01']/moments2['m00'])
+        # Canny Edge Detection
+        edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)
+        self.img_edges = edges
+        
+        # Pixel expansion
+        # Structure 5 × Square structure element of 5
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+        # expand
+        dst = cv2.dilate(edges, kernel=kernel)
+        self.img_dst = dst
+
+        # erode
+        erode = cv2.erode(dst, None, iterations=1)
+        self.img_erode = erode
+
+        # contours
+        self.contours, _ = cv2.findContours(erode, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Centroid coordinates
+        moments = cv2.moments(dst, binaryImage=True)
+
+        x_coord = int(moments['m10']/moments['m00'])
+        y_coord = int(moments['m01']/moments['m00'])
+
+        return x_coord, y_coord
 
 
-# Show the results
-coords1 = cv2.rectangle(screw_img, (x1_coord,y1_coord), (x1_coord,y1_coord), (0,255,0), 10)
-coords2 = cv2.rectangle(glass_img, (x2_coord,y2_coord), (x2_coord,y2_coord), (0,255,0), 10)
-cv2.imshow("Screw centroid detection", coords1)
-cv2.imshow("Glass centroid detection", coords2)
+    def get_contours(self):
+        return self.contours
 
-'''black_img = np.zeros((288, 384))
-coords = cv2.rectangle(black_img, (x_coord,y_coord), (x_coord,y_coord), (255,0,0), 2)
-#print(img_gray)
-row1 = np.concatenate((img_gray,edges), axis=1)
-row2 = np.concatenate((dst,coords), axis=1)
-#images = np.concatenate((row1,row2), axis=0)
 
-cv2.imshow("Image processing: grayscaled and edge detection", row1)
-cv2.imshow("Image processing: white pixels expanded and centroid detection", row2)
-'''
-#cv2.imshow("Image processing", images)
-cv2.waitKey(0)
+    def show_img(self, process="img"):
+        """process tiene que ser el nombre de alguna de las imágenes guardadas en la clase."""
+        img = self.get_img(process)
 
-cv2.destroyAllWindows()
+        cv2.imshow(f"{process}", img)
+        cv2.waitKey(0)
+
+        cv2.destroyAllWindows()
+
+
+
+    def show_centroid(self):
+        x, y = self.centroid_detection()
+        coords = cv2.rectangle(self.img, (x, y), (x, y), (0,255,0), 10)
+
+        cv2.imshow("Centroid detection", coords)
+        cv2.waitKey(0)
+
+        cv2.destroyAllWindows()
