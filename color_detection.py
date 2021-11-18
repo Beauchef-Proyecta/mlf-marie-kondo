@@ -20,6 +20,7 @@ class ColorDetector:
         cv2.imshow('frame', self.img)
         cv2.imshow('mask', self.mask)
         cv2.imshow('res',self.res)
+        print(np.shape(self.img))
 
         cv2.waitKey(0)
         cv2.destroyAllWindows()
