@@ -19,8 +19,6 @@ class Detector:
         self.img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if resize:
             self.img = cv2.resize(self.img, self.img_size, interpolation=cv2.INTER_LINEAR)
-            self.img_mask = cv2.imread('images/mask_workspace.png')
-            self.img_mask = cv2.resize(self.img_mask, self.img_size, interpolation=cv2.INTER_LINEAR)
 
 
     def get_img(self, process="img"):
@@ -28,11 +26,14 @@ class Detector:
 
     def centroid_detection(self):
         # Apply mask
-        img = np.copy(self.img)
-        self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
+        #img = np.copy(self.img)
+        cv2.imwrite("c:/data/lenaGuardada.jpeg",im)
+        #self.img_mask = cv2.imread('images/mask_workspace.png')
+        #self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
 
         # Convert to graycsale
-        img_gray = cv2.cvtColor(self.img_masked, cv2.COLOR_BGR2GRAY)
+        img_gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        cv2.imwrite('images/copy_img.png',img_gray)
         self.img_gray = img_gray
 
         # Blur the image for better edge detection
