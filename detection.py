@@ -25,16 +25,15 @@ class Detector:
     def get_img(self, process="img"):
         return getattr(self, process)
 
-
     def centroid_detection(self):
         # Apply mask
+        img = np.copy(self.img)
         self.img_mask = cv2.imread('images/mask_workspace.png')
-        self.img_masked = cv2.bitwise_and(self.img, self.img, mask=self.mask)
+        self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
 
         # Convert to graycsale
         img_gray = cv2.cvtColor(self.img_masked, cv2.COLOR_BGR2GRAY)
         self.img_gray = img_gray
-
 
         # Blur the image for better edge detection
         img_blur = cv2.GaussianBlur(img_gray, (3,3), 0)
@@ -90,3 +89,4 @@ class Detector:
         cv2.waitKey(0)
 
         cv2.destroyAllWindows()
+
