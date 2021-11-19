@@ -8,6 +8,8 @@ class Detector:
         self.img_size = img_size
 
         # Initialize some images used in processing
+        self.img_mask = None
+        self.img_masked = None
         self.img_gray = None
         self.img_blur = None
         self.img_edges = None
@@ -25,8 +27,12 @@ class Detector:
 
 
     def centroid_detection(self):
+        # Apply mask
+        self.img_mask = cv2.imread('images/mask_workspace.png')
+        self.img_masked = cv2.bitwise_and(self.img, self.img, mask=self.mask)
+
         # Convert to graycsale
-        img_gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        img_gray = cv2.cvtColor(self.img_masked, cv2.COLOR_BGR2GRAY)
         self.img_gray = img_gray
 
 
