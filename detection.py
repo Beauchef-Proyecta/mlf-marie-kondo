@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 
-
 class Detector:
     def __init__(self, img_size=(360, 640)):
         self.img = None
@@ -20,6 +19,8 @@ class Detector:
         self.img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if resize:
             self.img = cv2.resize(self.img, self.img_size, interpolation=cv2.INTER_LINEAR)
+            self.img_mask = cv2.imread('images/mask_workspace.png')
+            self.img_mask = cv2.resize(self.img_mask, self.img_size, interpolation=cv2.INTER_LINEAR)
 
 
     def get_img(self, process="img"):
@@ -28,7 +29,6 @@ class Detector:
     def centroid_detection(self):
         # Apply mask
         img = np.copy(self.img)
-        self.img_mask = cv2.imread('images/mask_workspace.png')
         self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
 
         # Convert to graycsale
