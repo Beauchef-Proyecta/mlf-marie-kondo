@@ -27,7 +27,7 @@ class Detector:
     def centroid_detection(self):
         # Apply mask
         #img = np.copy(self.img)
-        cv2.imwrite("c:/data/lenaGuardada.jpeg",im)
+        #cv2.imwrite("c:/data/lenaGuardada.jpeg",im)
         #self.img_mask = cv2.imread('images/mask_workspace.png')
         #self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
 
