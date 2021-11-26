@@ -1,13 +1,14 @@
 import numpy as np
 import cv2
 
-
 class Detector:
     def __init__(self, img_size=(360, 640)):
         self.img = None
         self.img_size = img_size
 
         # Initialize some images used in processing
+        self.img_mask = None
+        self.img_masked = None
         self.img_gray = None
         self.img_blur = None
         self.img_edges = None
@@ -23,12 +24,17 @@ class Detector:
     def get_img(self, process="img"):
         return getattr(self, process)
 
-
     def centroid_detection(self):
+        # Apply mask
+        #img = np.copy(self.img)
+        #cv2.imwrite("c:/data/lenaGuardada.jpeg",im)
+        #self.img_mask = cv2.imread('images/mask_workspace.png')
+        #self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
+
         # Convert to graycsale
         img_gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        cv2.imwrite('images/copy_img.png',img_gray)
         self.img_gray = img_gray
-
 
         # Blur the image for better edge detection
         img_blur = cv2.GaussianBlur(img_gray, (3,3), 0)
@@ -84,3 +90,4 @@ class Detector:
         cv2.waitKey(0)
 
         cv2.destroyAllWindows()
+
