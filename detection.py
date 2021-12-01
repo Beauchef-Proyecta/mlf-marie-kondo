@@ -2,21 +2,19 @@ import numpy as np
 import cv2
 
 class Detector:
-    def __init__(self, img_size=(360, 640)):
+    def __init__(self, img_size=None):
         self.img = None
         self.img_size = img_size
 
         # Initialize some images used in processing
-        self.img_mask = None
-        self.img_masked = None
         self.img_gray = None
         self.img_blur = None
         self.img_edges = None
         self.img_dst = None
     
 
-    def load_img(self, img, resize=True):
-        self.img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    def load_img(self, img, resize=False):
+        self.img = img
         if resize:
             self.img = cv2.resize(self.img, self.img_size, interpolation=cv2.INTER_LINEAR)
 
@@ -26,14 +24,13 @@ class Detector:
 
     def centroid_detection(self):
         # Apply mask
-        #img = np.copy(self.img)
-        #cv2.imwrite("c:/data/lenaGuardada.jpeg",im)
-        #self.img_mask = cv2.imread('images/mask_workspace.png')
-        #self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
+        img = np.copy(self.img)
+        img_mask = cv2.imread('images/mask_workspace.png')
+        self.img_mask = cv2.cvtColor(img_mask, cv2.COLOR_BGR2GRAY)
+        self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
 
-        # Convert to graycsale
-        img_gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        cv2.imwrite('images/copy_img.png',img_gray)
+        # Convert to grayscale
+        img_gray = cv2.cvtColor(self.img_masked, cv2.COLOR_BGR2GRAY)
         self.img_gray = img_gray
 
         # Blur the image for better edge detection
@@ -56,19 +53,47 @@ class Detector:
         self.img_erode = erode
 
         # contours
-        self.contours, _ = cv2.findContours(erode, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(erode, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+        # Filter unwanted contours
+        self.contours = []
+        for contour in contours:
+            moments = cv2.moments(contour)
+            contour_area = moments["m00"]
+            if contour_area > 370 and contour_area < 430:
+                self.contours.append(contour)
+
+
+        coordinates = []
 
         # Centroid coordinates
-        moments = cv2.moments(dst, binaryImage=True)
+        for contour in self.contours:
+            moments = cv2.moments(contour)
 
-        x_coord = int(moments['m10']/moments['m00'])
-        y_coord = int(moments['m01']/moments['m00'])
+            x_coord = int(moments['m10']/moments['m00'])
+            y_coord = int(moments['m01']/moments['m00'])
+            coordinates.append((x_coord, y_coord))
 
-        return x_coord, y_coord
+        return coordinates
 
 
     def get_contours(self):
         return self.contours
+
+
+    def draw_contours(self):
+        image_copy = self.img.copy()
+
+        cv2.drawContours(
+            image=image_copy,
+            contours=self.contours,
+            contourIdx=-1,
+            color=(0, 255, 0),
+            lineType=cv2.LINE_AA)
+
+        cv2.imshow('Contours on original image', image_copy)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
     def show_img(self, process="img"):
@@ -81,12 +106,13 @@ class Detector:
         cv2.destroyAllWindows()
 
 
-
     def show_centroid(self):
-        x, y = self.centroid_detection()
-        coords = cv2.rectangle(self.img, (x, y), (x, y), (0,255,0), 10)
+        coordinates = self.centroid_detection()
+        new_img = self.img.copy()
+        for coordinate in coordinates:
+            new_img = cv2.rectangle(new_img, coordinate, coordinate, (0,255,0), 8)
 
-        cv2.imshow("Centroid detection", coords)
+        cv2.imshow("Centroid detection", new_img)
         cv2.waitKey(0)
 
         cv2.destroyAllWindows()

@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 class ColorDetector:
-    black = [np.array([0,0,0]), np.array([350,55,100])]
+    black = [np.array([0,0,0]), np.array([70,70,70])]
 
     def __init__(self):
         self.img = None
@@ -13,7 +13,7 @@ class ColorDetector:
         self.hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     def detection(self, color=black):
-        self.mask = cv2.inRange(self.img, self.black[0], self.black[1])
+        self.mask = cv2.inRange(self.img, color[0], color[1])
         self.res = cv2.bitwise_and(self.img, self.img, mask = self.mask)
 
     def show_imgs(self):

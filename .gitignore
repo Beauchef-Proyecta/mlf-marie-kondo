@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # Additional files
-detector_test.py
+/.vscode
