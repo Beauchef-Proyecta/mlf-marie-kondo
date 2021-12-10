@@ -2,6 +2,12 @@ import numpy as np
 import cv2
 
 class Detector:
+    x_origin = 263
+    y_origin = 371
+
+    width_mm = 515
+    height_mm = 390
+
     def __init__(self, img_size=None):
         self.img = None
         self.img_size = img_size

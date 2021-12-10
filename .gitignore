@@ -130,3 +130,8 @@ dmypy.json
 
 # Additional files
 /.vscode
+/chess_test
+bla.py
+calibresult.png
+camera_calibration.py
+camera_parameters.npz
