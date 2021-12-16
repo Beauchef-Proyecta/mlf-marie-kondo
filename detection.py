@@ -1,5 +1,10 @@
 import numpy as np
 import cv2
+import sys
+sys.path.append('/home/pi/mlf/api')
+
+from client import ClientWrapper
+c = ClientWrapper()
 
 class Detector:
     x_origin = 263
@@ -19,16 +24,26 @@ class Detector:
         self.img_dst = None
         self.img_rotated = None
     
+    def get_frame(self): 
+        img = c.get_single_frame()
+        cv2.imwrite('frame.jpg', img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        print('Frame guardado')
 
-    def load_img(self, img, resize=False):
-        self.img = img
+    def work_with(self, img_path, resize=False):
+        self.img = cv2.imread(img_path)
         if resize:
             self.img = cv2.resize(self.img, self.img_size, interpolation=cv2.INTER_LINEAR)
+        
+        #Rotate 2.5 degrees
         (h, w) = self.img.shape[:2]
         (cX, cY) = (w // 2, h // 2)
         M = cv2.getRotationMatrix2D((cX, cY), 2.5, 1.0)
         self.img = cv2.warpAffine(self.img, M, (w, h))
-        cv2.imwrite('save_img2.jpg', self.img)
+
+        cv2.imwrite('image.jpg', self.img)
+        print('estamos')
 
 
     def get_img(self, process="img"):
