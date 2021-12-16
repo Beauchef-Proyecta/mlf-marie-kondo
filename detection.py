@@ -17,12 +17,18 @@ class Detector:
         self.img_blur = None
         self.img_edges = None
         self.img_dst = None
+        self.img_rotated = None
     
 
     def load_img(self, img, resize=False):
         self.img = img
         if resize:
             self.img = cv2.resize(self.img, self.img_size, interpolation=cv2.INTER_LINEAR)
+        (h, w) = self.img.shape[:2]
+        (cX, cY) = (w // 2, h // 2)
+        M = cv2.getRotationMatrix2D((cX, cY), 2.5, 1.0)
+        self.img = cv2.warpAffine(self.img, M, (w, h))
+        cv2.imwrite('save_img2.jpg', self.img)
 
 
     def get_img(self, process="img"):
@@ -122,4 +128,6 @@ class Detector:
         cv2.waitKey(0)
 
         cv2.destroyAllWindows()
+    
+
 
