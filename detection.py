@@ -43,19 +43,12 @@ class Detector:
         self.img = cv2.warpAffine(self.img, M, (w, h))
 
         cv2.imwrite('image.jpg', self.img)
-        print('estamos')
+        print('tenemos imagen')
 
 
     def get_img(self, process="img"):
         return getattr(self, process)
-
-    def centroid_detection(self):
-        # Apply mask
-        img = np.copy(self.img)
-        img_mask = cv2.imread('images/mask_workspace.png')
-        self.img_mask = cv2.cvtColor(img_mask, cv2.COLOR_BGR2GRAY)
-        self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
-
+    def process_image(self):
         # Convert to grayscale
         img_gray = cv2.cvtColor(self.img_masked, cv2.COLOR_BGR2GRAY)
         self.img_gray = img_gray
@@ -78,6 +71,15 @@ class Detector:
         # erode
         erode = cv2.erode(dst, None, iterations=1)
         self.img_erode = erode
+
+    def centroid_detection(self):
+        # Apply mask
+        img = np.copy(self.img)
+        img_mask = cv2.imread('images/mask_workspace.png')
+        self.img_mask = cv2.cvtColor(img_mask, cv2.COLOR_BGR2GRAY)
+        self.img_masked = cv2.bitwise_and(img, img, mask=self.img_mask)
+
+        self.process_image()
 
         # contours
         contours, hierarchy = cv2.findContours(erode, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
