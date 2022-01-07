@@ -16,10 +16,10 @@ eff = Effector()
 
 def main():
     eff.action(1)
-    robot_serial.write_servo(1, 90)
+    robot_serial.write_servo(1, 60)
     time.sleep(1.2)
     eff.action(0)
-    robot_serial.write_servo(1, 30)
+    robot_serial.write_servo(1, 20)
     return
-    
+
 main()
