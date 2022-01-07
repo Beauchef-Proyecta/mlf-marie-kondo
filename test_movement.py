@@ -14,11 +14,12 @@ robot_serial = SerialControl()
 robot_serial.open_serial()
 eff = Effector()
 
-eff.action(1)
-robot_serial.write_servo(1, 90)
-time.sleep(1.2)
-eff.action(0)
-robot_serial.write_servo(1, 45)
-
 def main():
+    eff.action(1)
+    robot_serial.write_servo(1, 90)
+    time.sleep(1.2)
+    eff.action(0)
+    robot_serial.write_servo(1, 30)
     return
+    
+main()
