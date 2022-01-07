@@ -1,11 +1,8 @@
 import sys
 import time
 import numpy as np
-#sys.path.append('/home/pi/mlf-marie-kondo')
 from mlf.core.serial_control import SerialControl
-from mlf.core.mk2robot import MK2Robot
 
-robot = MK2Robot(link_lengths=[55, 39, 135, 147, 66.3])
 robot_serial = SerialControl()
 robot_serial.open_serial()
 
