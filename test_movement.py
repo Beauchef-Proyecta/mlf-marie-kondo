@@ -1,8 +1,8 @@
-#import sys
-#sys.path.append('/home/pi/mlf/core')
 from effector import Effector
-from mlf.core.serial_control import SerialControl
-from mlf.core.mk2robot import MK2Robot
+import sys
+sys.path.append('/home/pi/mlf/core')
+from serial_control import SerialControl
+from mk2robot import MK2Robot
 
 import time
 import cv2

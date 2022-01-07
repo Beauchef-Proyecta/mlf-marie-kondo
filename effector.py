@@ -1,7 +1,9 @@
 import sys
 import time
 import numpy as np
-from mlf.core.serial_control import SerialControl
+
+sys.path.append('/home/pi/mlf/core')
+from serial_control import SerialControl
 
 robot_serial = SerialControl()
 robot_serial.open_serial()
