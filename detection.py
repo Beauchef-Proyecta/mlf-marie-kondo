@@ -1,3 +1,4 @@
+print('holiss')
 import numpy as np
 import cv2
 import sys
@@ -48,6 +49,7 @@ class Detector:
 
     def get_img(self, process="img"):
         return getattr(self, process)
+
     def process_image(self):
         # Convert to grayscale
         img_gray = cv2.cvtColor(self.img_masked, cv2.COLOR_BGR2GRAY)
