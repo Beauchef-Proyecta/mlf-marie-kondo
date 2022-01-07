@@ -17,10 +17,10 @@ class Effector:
     def action(self, a=1):
         if a:
             #open
-            robot_serial.run_effector(self.angmin)
+            robot_serial.write_servo(4, self.angmin)
         else:
             #close
-            robot_serial.run_effector(self.angmax)
+            robot_serial.write_servo(4, self.angmax)
 
 
 
